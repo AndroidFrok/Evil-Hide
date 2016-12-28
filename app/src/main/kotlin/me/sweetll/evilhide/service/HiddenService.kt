@@ -8,8 +8,26 @@ import android.util.Log
 
 import eu.chainfire.libsuperuser.Shell
 import me.sweetll.evilhide.AppApplication
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 class HiddenService : IntentService("hidden-service") {
+    val session: Shell.Interactive by lazy {
+        Shell.Builder()
+                .useSH()
+                .setWantSTDERR(true)
+                .setOnSTDOUTLineListener { output ->
+                    Log.d("evil", "output = $output")
+                }
+                .setOnSTDERRLineListener { error ->
+                    Log.d("evil", "error = $error")
+                }
+                .open { commandCode, exitCode, output ->
+                    output.forEach {
+                        Log.d("evil", "result = $it")
+                    }
+                }
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -20,7 +38,23 @@ class HiddenService : IntentService("hidden-service") {
             val action = it.action
             if (!action.isNullOrEmpty()) {
                 Log.d("evil", "action = $action")
-                Shell.SU.run(action)
+//                Shell.SH.run(action)
+//                session.addCommand(action)
+                val output = StringBuffer()
+                try {
+                    val p = Runtime.getRuntime().exec(action)
+                    p.waitFor()
+                    val reader = BufferedReader(InputStreamReader(p.inputStream))
+                    var line = reader.readLine()
+                    while (line != null) {
+                        output.append(line + "\n")
+                        line = reader.readLine()
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+                val response = output.toString()
+                Log.d("evil", "output = $response")
             }
         }
     }

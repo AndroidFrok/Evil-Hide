@@ -18,7 +18,7 @@ class AppInfo(val applicationInfo: ApplicationInfo) {
     var hidden: Boolean
         get() = !applicationInfo.enabled
         set(value) {
-            val cmd = "pm ${if (value) "disable" else "enable"} $packageName"
+            val cmd = "pm ${if (value) "hide" else "unhide"} $packageName"
             HiddenService.performAction(cmd)
             applicationInfo.enabled = !applicationInfo.enabled
         }
