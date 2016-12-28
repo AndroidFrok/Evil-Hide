@@ -18,6 +18,22 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
 
+    signingConfigs {
+        release {
+            storeFile file("../signature/platform.keystore")
+            storePassword 'android'
+            keyAlias 'platform'
+            keyPassword 'android'
+        }
+
+        debug {
+            storeFile file("../signature/platform.keystore")
+            storePassword 'android'
+            keyAlias 'platform'
+            keyPassword 'android'
+        }
+    }
+
     defaultConfig {
         applicationId "me.sweetll.evilhide"
         minSdkVersion 14
