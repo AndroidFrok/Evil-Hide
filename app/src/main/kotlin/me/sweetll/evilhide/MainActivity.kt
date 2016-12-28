@@ -3,6 +3,7 @@ package me.sweetll.evilhide
 import android.Manifest
 import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -80,12 +81,12 @@ class MainActivity : AppCompatActivity() {
 
     fun populateAppList(flag: Int) {
         val pm = packageManager
-        val installedApps = pm.getInstalledApplications(0)
+        val installedApps = pm.getInstalledApplications(PackageManager.MATCH_UNINSTALLED_PACKAGES)
 
         appAdapter.setNewData(
                 when (flag) {
                     Settings.SPINNER_STAR_APP -> installedApps.filter { it.packageName.getFavorite() }
-                    Settings.SPINNER_HIDDEN_APP -> installedApps.filter { !it.enabled }
+                    Settings.SPINNER_HIDDEN_APP -> installedApps.filter { it.flags and ApplicationInfo.FLAG_INSTALLED != ApplicationInfo.FLAG_INSTALLED }
                     else -> installedApps
                 }
                 .filter { it.packageName != BuildConfig.APPLICATION_ID && it.flags and ApplicationInfo.FLAG_SYSTEM != 1}

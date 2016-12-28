@@ -6,7 +6,7 @@ import me.sweetll.evilhide.AppApplication
 import me.sweetll.evilhide.extension.*
 import me.sweetll.evilhide.service.HiddenService
 
-class AppInfo(val applicationInfo: ApplicationInfo) {
+class AppInfo(var applicationInfo: ApplicationInfo) {
     val packageName: String
         get() = applicationInfo.packageName
 
@@ -16,11 +16,11 @@ class AppInfo(val applicationInfo: ApplicationInfo) {
             packageName.saveFavorite(value)
         }
     var hidden: Boolean
-        get() = !applicationInfo.enabled
+        get() = applicationInfo.flags and ApplicationInfo.FLAG_INSTALLED != ApplicationInfo.FLAG_INSTALLED
         set(value) {
             val cmd = "pm ${if (value) "hide" else "unhide"} $packageName"
             HiddenService.performAction(cmd)
-            applicationInfo.enabled = !applicationInfo.enabled
+            applicationInfo.flags = applicationInfo.flags xor ApplicationInfo.FLAG_INSTALLED
         }
     var password: String
         get() = packageName.getPassword()
