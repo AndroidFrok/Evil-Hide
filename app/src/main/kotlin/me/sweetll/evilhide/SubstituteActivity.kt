@@ -3,6 +3,7 @@ package me.sweetll.evilhide
 import android.Manifest
 import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -21,7 +22,6 @@ import me.sweetll.evilhide.config.Settings
 import me.sweetll.evilhide.databinding.ActivityMainBinding
 import me.sweetll.evilhide.extension.getFavorite
 import me.sweetll.evilhide.model.AppInfo
-
 
 class SubstituteActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -82,18 +82,20 @@ class SubstituteActivity : AppCompatActivity() {
 
     fun populateAppList(flag: Int) {
         val pm = packageManager
+        val allApps = pm.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES)
         val installedApps = pm.getInstalledApplications(0)
+        val uninstalledApps = allApps.subtract(installedApps)
 
         appAdapter.setNewData(
                 when (flag) {
-                    Settings.SPINNER_STAR_APP -> installedApps.filter { it.packageName.getFavorite() }
-                    Settings.SPINNER_HIDDEN_APP -> installedApps.filter { !it.enabled }
-                    else -> installedApps
+                    Settings.SPINNER_STAR_APP -> allApps.filter { it.packageName.getFavorite() }
+                    Settings.SPINNER_HIDDEN_APP -> uninstalledApps
+                    else -> allApps
                 }
                 .filter { it.packageName != BuildConfig.APPLICATION_ID && it.flags and ApplicationInfo.FLAG_SYSTEM != 1}
                 .fold(mutableListOf(), {
                     newData, applicationInfo ->
-                    newData.add(AppInfo(applicationInfo))
+                    newData.add(AppInfo(applicationInfo, applicationInfo in uninstalledApps))
                     newData
                 })
         )

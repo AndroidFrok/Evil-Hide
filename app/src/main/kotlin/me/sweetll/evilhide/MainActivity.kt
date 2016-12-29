@@ -81,18 +81,23 @@ class MainActivity : AppCompatActivity() {
 
     fun populateAppList(flag: Int) {
         val pm = packageManager
-        val installedApps = pm.getInstalledApplications(PackageManager.MATCH_UNINSTALLED_PACKAGES)
+        val allApps = pm.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES)
+        val installedApps = pm.getInstalledApplications(0)
+        val uninstalledApps = allApps.filterNot {
+            outerApp ->
+            installedApps.any { it.packageName == outerApp.packageName }
+        }
 
         appAdapter.setNewData(
                 when (flag) {
-                    Settings.SPINNER_STAR_APP -> installedApps.filter { it.packageName.getFavorite() }
-                    Settings.SPINNER_HIDDEN_APP -> installedApps.filter { it.flags and ApplicationInfo.FLAG_INSTALLED != ApplicationInfo.FLAG_INSTALLED }
-                    else -> installedApps
+                    Settings.SPINNER_STAR_APP -> allApps.filter { it.packageName.getFavorite() }
+                    Settings.SPINNER_HIDDEN_APP -> uninstalledApps
+                    else -> allApps
                 }
                 .filter { it.packageName != BuildConfig.APPLICATION_ID && it.flags and ApplicationInfo.FLAG_SYSTEM != 1}
                 .fold(mutableListOf(), {
                     newData, applicationInfo ->
-                    newData.add(AppInfo(applicationInfo))
+                    newData.add(AppInfo(applicationInfo, applicationInfo in uninstalledApps))
                     newData
                 })
         )
