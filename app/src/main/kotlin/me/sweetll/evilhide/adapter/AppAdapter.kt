@@ -1,7 +1,7 @@
 package me.sweetll.evilhide.adapter
 
-import android.databinding.DataBindingUtil
-import android.support.v7.widget.RecyclerView
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import me.sweetll.evilhide.R
@@ -9,7 +9,7 @@ import me.sweetll.evilhide.databinding.ItemAppBinding
 import me.sweetll.evilhide.model.AppInfo
 import me.sweetll.evilhide.viewmodel.AppViewModel
 
-class AppAdapter(var data: MutableList<AppInfo>) : RecyclerView.Adapter<AppAdapter.ViewHolder>() {
+class AppAdapter(var data: MutableList<AppInfo>) : androidx.recyclerview.widget.RecyclerView.Adapter<AppAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding: ItemAppBinding = DataBindingUtil.inflate(
@@ -33,18 +33,18 @@ class AppAdapter(var data: MutableList<AppInfo>) : RecyclerView.Adapter<AppAdapt
         notifyDataSetChanged()
     }
 
-    class ViewHolder(val binding: ItemAppBinding): RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(val binding: ItemAppBinding): androidx.recyclerview.widget.RecyclerView.ViewHolder(binding.root) {
         fun bindAppInfo(appInfo: AppInfo) {
             binding.starBtn.setOnFavoriteChangeListener{
                 button, favorite ->
                 if (button.isPressed) {
-                    binding.viewModel.onFavoriteChange(favorite)
+                    binding.viewModel?.onFavoriteChange(favorite)
                 }
             }
             binding.switchBtn.setOnCheckedChangeListener {
                 button, check ->
                 if (button.isPressed) {
-                    binding.viewModel.onCheckChange(check)
+                    binding.viewModel?.onCheckChange(check)
                 }
             }
             binding.switchBtn.isChecked = appInfo.hidden

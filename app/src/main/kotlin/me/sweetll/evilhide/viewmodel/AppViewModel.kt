@@ -1,10 +1,10 @@
 package me.sweetll.evilhide.viewmodel
 
 import android.content.Context
-import android.databinding.ObservableBoolean
-import android.databinding.ObservableField
+import androidx.databinding.ObservableBoolean
+import androidx.databinding.ObservableField
 import android.graphics.drawable.Drawable
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.view.View
 import android.widget.EditText
 import me.sweetll.evilhide.model.AppInfo

@@ -15,7 +15,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,7 +34,8 @@
             android:name=".service.HiddenService"
             android:exported="false" />
 
-        <receiver android:name=".receiver.CallReceiver">
+        <receiver android:name=".receiver.CallReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>

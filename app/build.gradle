@@ -1,23 +1,23 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.android.support:design:25.1.0'
-    compile 'com.android.support:recyclerview-v7:25.1.0'
-    compile 'eu.chainfire:libsuperuser:1.0.0.+'
-    compile 'com.karumi:dexter:3.0.0'
-    compile 'com.github.ivbaranov:materialfavoritebutton:0.1.2'
-    kapt 'com.android.databinding:compiler:2.2.3'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation 'junit:junit:4.12'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'eu.chainfire:libsuperuser:1.0.0.+'
+    implementation 'com.karumi:dexter:3.0.0'
+    implementation 'com.github.ivbaranov:materialfavoritebutton:0.1.2'
+//    kapt 'androidx.databinding:databinding-compiler:1.0.0'
 }
-
+def v = 31
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
-
+    compileSdkVersion v
+//    buildToolsVersion "25.0.2"
     signingConfigs {
         release {
             storeFile file("../signature/platform.keystore")
@@ -37,7 +37,7 @@ android {
     defaultConfig {
         applicationId "me.sweetll.evilhide"
         minSdkVersion 21
-        targetSdkVersion 25
+        targetSdkVersion v
         versionCode 1
         versionName "1.0.0"
     }

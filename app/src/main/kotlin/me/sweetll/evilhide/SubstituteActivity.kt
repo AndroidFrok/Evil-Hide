@@ -4,10 +4,10 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.databinding.DataBindingUtil
-import android.support.v7.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -49,7 +49,8 @@ class SubstituteActivity : AppCompatActivity() {
     }
 
     fun setupRecyclerView() {
-        binding.appRecycler.layoutManager = LinearLayoutManager(this)
+        binding.appRecycler.layoutManager =
+            androidx.recyclerview.widget.LinearLayoutManager(this)
         binding.appRecycler.adapter = appAdapter
     }
 

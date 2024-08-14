@@ -1,6 +1,6 @@
 package me.sweetll.evilhide.adapter
 
-import android.databinding.BindingAdapter
+import androidx.databinding.BindingAdapter
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import android.widget.Switch

@@ -19,7 +19,7 @@ fun String.saveHidden(hidden: Boolean) {
     }
 }
 
-fun String.getPassword(): String = sp.getString("$PREFIX_PREF_KEY_S_PASSWORD$this", "")
+fun String.getPassword(): String = sp.getString("$PREFIX_PREF_KEY_S_PASSWORD$this", "").toString()
 fun String.savePassword(password: String) {
     sp.edit {
         putString("$PREFIX_PREF_KEY_S_PASSWORD${this@savePassword}", password)
