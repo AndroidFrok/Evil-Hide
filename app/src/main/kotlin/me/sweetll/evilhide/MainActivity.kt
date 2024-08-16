@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import androidx.databinding.DataBindingUtil
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
@@ -37,7 +38,9 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
 
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?, view: View?, position: Int, id: Long
+            ) {
                 populateAppList(position)
             }
 
@@ -48,8 +51,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setupRecyclerView() {
-        binding.appRecycler.layoutManager =
-            androidx.recyclerview.widget.LinearLayoutManager(this)
+        binding.appRecycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         binding.appRecycler.adapter = appAdapter
     }
 
@@ -70,37 +72,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun initPermissions() {
-        val snackBarPermissionListener = SnackbarOnDeniedPermissionListener.Builder
-                .with(binding.root as ViewGroup, "需要电话权限以便从拨号盘启动")
-                .withOpenSettingsButton("设置")
-                .build()
-        Dexter.withActivity(this)
-                .withPermission(Manifest.permission.PROCESS_OUTGOING_CALLS)
-                .withListener(snackBarPermissionListener)
-                .check()
+        val snackBarPermissionListener = SnackbarOnDeniedPermissionListener.Builder.with(
+            binding.root as ViewGroup, "需要电话权限以便从拨号盘启动"
+        ).withOpenSettingsButton("设置").build()
+        Dexter.withActivity(this).withPermission(Manifest.permission.PROCESS_OUTGOING_CALLS)
+            .withListener(snackBarPermissionListener).check()
     }
 
     fun populateAppList(flag: Int) {
         val pm = packageManager
         val allApps = pm.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES)
         val installedApps = pm.getInstalledApplications(0)
-        val uninstalledApps = allApps.filterNot {
-            outerApp ->
+        val uninstalledApps = allApps.filterNot { outerApp ->
             installedApps.any { it.packageName == outerApp.packageName }
         }
-
-        appAdapter.setNewData(
-                when (flag) {
-                    Settings.SPINNER_STAR_APP -> allApps.filter { it.packageName.getFavorite() }
-                    Settings.SPINNER_HIDDEN_APP -> uninstalledApps
-                    else -> allApps
-                }
-                .filter { it.packageName != BuildConfig.APPLICATION_ID && it.flags and ApplicationInfo.FLAG_SYSTEM != 1}
-                .fold(mutableListOf(), {
-                    newData, applicationInfo ->
-                    newData.add(AppInfo(applicationInfo, applicationInfo in uninstalledApps))
-                    newData
-                })
+        appAdapter.setNewData(when (flag) {
+//                     根据左上角选项加载不同列表
+            Settings.SPINNER_STAR_APP -> allApps.filter { it.packageName.getFavorite() }
+            Settings.SPINNER_HIDDEN_APP -> uninstalledApps
+            else -> allApps
+        }
+//            .filter { it.packageName != BuildConfig.APPLICATION_ID && it.flags and ApplicationInfo.FLAG_SYSTEM == 1 } // && it.flags and ApplicationInfo.FLAG_SYSTEM != 1
+            .fold(mutableListOf(), { newData, applicationInfo ->
+                Log.d("", applicationInfo.packageName)
+                newData.add(AppInfo(applicationInfo, applicationInfo in uninstalledApps))
+                newData
+            })
         )
     }
 
